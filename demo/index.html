@@ -1,34 +1,95 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width,initial-scale=1.0" name="viewport" />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="description" content="Demo usage for the Leaflet.WikipediaLayer plugin">
+    <meta name="author" content="Matt Barker">
+    <title>Wikipedia Map</title>
+    
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.css" />
+	
+	<link href="https://cdn.rawgit.com/MatthewBarker/leaflet-wikipedia/master/example/leaflet.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	      <link rel="stylesheet" href="../dist/leaflet.css" />
 
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="../dist/L.Control.Locate.min.css" />
+	
+	
+	
+	
+	<style>
+.leaflet-control-layers-toggle:after{ 
+    content:"layers"; 
+    color:#000 ;
+}
+.leaflet-control-layers-toggle{ 
+    width:auto;
+    background-position:3px 50% ;
+    padding:3px;
+    padding-left:5px;
+    text-decoration:none;
+    line-height:36px;
+}
+</style>
+	<style>
+	    body { margin:0; padding:0; z-index:0}
+	    #map { position:absolute; left:0; width:100%; height:100%}
+	
+	</style>
+	</head>
+<body>
+	<div id="map"></div>
+    	
+	<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+	
+	<script src="https://cdn.rawgit.com/MatthewBarker/leaflet-wikipedia/master/example/bundle.js"></script>
+	
 
-    <style type="text/css">
-      html, body {
-        height: 100%;
-        padding: 0;
-        margin: 0;
-      }
-
-      #map {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="map"></div>
-
-    <a href="https://github.com/domoritz/leaflet-locatecontrol"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
-
-    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet-src.js"></script>
-    <script src="../src/L.Control.Locate.js" ></script>
-    <script src="script.js"></script>
-  </body>
+	
+    <script>              
+        var map = L.map('map', {
+        minZoom: 4,
+        maxZoom: 20
+    })
+	map.setView([37.785167, -122.464277], 14);
+	   
+      //Add Mapbox Basemap Layer
+	//var Mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/sheffieldhale/cjw9z7ofb0l4f1dqb3ghrst3a.html?fresh=true&title=true&access_token=pk.eyJ1Ijoic2hlZmZpZWxkaGFsZSIsImEiOiJvWU4xOFMwIn0.rU9vYzMsruo3JSJPQ92LaQ#8').addTo(map);
+	 
+	    
+	var watercolor = L.tileLayer('http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        })
+	    
+	   var terrain = L.tileLayer('http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        })
+	    
+	    var OpenStreetMap = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+	   
+        // Add a Wikipedia layer
+       var Wikipedia = L.layerGroup.wikipediaLayer({ target: '_blank', images: 'https://cdn.rawgit.com/MatthewBarker/leaflet-wikipedia/master/build/images' }).addTo(map);
+    
+	    // Add a Geolocation feature
+	    var Geolocation = L.control.locate().addTo(map);
+	    
+	    var baseLayers = {
+	    "terrain": terrain,
+	    "watercolor": watercolor,
+	    "OpenStreetMap": OpenStreetMap
+	};
+	var overlays = {
+	    "Wikipedia": Wikipedia,
+	//"Geolocation": Geolocation,
+	};
+	L.control.layers(baseLayers, overlays).addTo(map);
+	    
+	    //Add control layers options?
+	//L.control.layers(<Object> baselayers?, <Object> overlays?, <Control.Layers options> options?)	  
+	
+	</script>
+</body>
 </html>
